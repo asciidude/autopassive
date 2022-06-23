@@ -47,6 +47,7 @@ if config.enabled == true then
             end
         
             EnableControlAction(0, 140)
+            time = config.time
         end)
     end)
 end
