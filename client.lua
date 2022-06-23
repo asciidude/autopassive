@@ -17,18 +17,19 @@ local time = config.time
 
 if config.enabled == true then
     AddEventHandler('playerSpawned', function()
+        if config.welcomeEnabled then
+            notify(config.message)
+        end
+
+        if config.messageEnabled then
+            notify(config.message)
+        end
+        
         Citizen.CreateThread(function()
             local ped = GetPlayerPed(-1)
-
-            if config.welcomeEnabled then
-                notify(config.message)
-            end
-
-            if config.messageEnabled then
-                notify(config.message)
-            end
             
-            while (time ~= 0) do
+            while time > 0 do
+                Citizen.Wait(1)
                 enablePeaceMode(ped)
 
                 if config.messageEnabled then
@@ -36,18 +37,17 @@ if config.enabled == true then
                         notify(config.message)
                     end
                 end
-        
-                Citizen.Wait(1)
+
                 time = time - 1
+                print(time)
             end
             
             -- END --
-            if config.endMessageEnabled then
-                notify(config.endMessage)
+            if time == 0 then
+                if config.endMessageEnabled then
+                    notify(config.endMessage)
+                end
             end
-        
-            EnableControlAction(0, 140)
-            time = config.time
         end)
     end)
 end
