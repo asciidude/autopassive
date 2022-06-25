@@ -17,7 +17,16 @@ print('AutoPassive loaded, created by asciidude')
 local joinPassive = false
 
 if config.joinEnabled then
+    local ped = GetPlayerPed(-1)
+    local playerPos = GetEntityCoords(ped)
+
     joinPassive = true
+
+    if config.teleportEnabled then
+        x1, y1, z1 = config.teleportCoordinates:match("([^,]+),([^,]+),([^,]+)")
+        SetEntityCoords(ped, x1, y1, z1)
+    end
+
     AddEventHandler('playerSpawned', function()
         if config.welcomeEnabled then
             notify(config.message)
@@ -57,6 +66,15 @@ if config.joinEnabled then
 
                     SetEntityInvincible(ped, false)
                     joinPassive = false
+
+                    if config.teleportEnabled then
+                        if config.teleportBackEnabled then
+                            SetEntityCoords(ped, playerPos.x, playerPos.y, playerPos.z)
+                        else
+                            x2, y2, z2 = config.teleportCoordinates2:match("([^,]+),([^,]+),([^,]+)")
+                            SetEntityCoords(ped, x2, y2, z2)
+                        end
+                    end
                 end
             end)
         end
